@@ -31,6 +31,13 @@ public class CorMusic
         login("george_not_found", "Kylesbadatmath");
         viewNextMusic();
         viewNextMusic();
+        viewNextMusic();
+        viewNextMusic();
+
+        comment("This guy is great you should def check him out");
+        like();
+
+        viewComments();
         
     }
 
@@ -52,7 +59,57 @@ public class CorMusic
                 activeMusic = upcomingMusic.get(idx+1);
             }
         }
+        System.out.println();
         System.out.println(activeMusic);
+    }
+
+    public void comment(String text)
+    {
+        if (activeMusic != null && activeUser != null)
+        {
+            Comment comment = new Comment(text, activeMusic, activeUser);
+            activeUser.comment(comment);
+            activeMusic.comment(comment);
+        }
+    }
+
+    public void viewComments()
+    {
+        viewComments(activeMusic);
+    }
+
+    public void viewComments(Music music)
+    {
+        System.out.println();
+        for (Comment c: music.getComments())
+        {
+            System.out.println(c);
+        }
+    }
+
+    public void viewComments(User user)
+    {
+        System.out.println();
+        for (Comment c: user.getComments())
+        {
+            System.out.println(c);
+        }
+    }
+
+    public void like()
+    {
+        if (activeMusic != null && activeUser != null)
+        {
+            activeUser.like(activeMusic);
+        }
+    }
+
+    public void unLike()
+    {
+        if (activeMusic != null && activeUser != null)
+        {
+            activeUser.unLike(activeMusic);
+        }
     }
 
     // 3. Write a print() method that uses System.out.println to print out all the instance variables.
