@@ -1,11 +1,59 @@
-public class Main 
+import java.util.ArrayList;
+
+public class CorMusic 
 {
     // 1. write 3 instance variables for class: private type variableName;
-    private Music[] upcomingMusic;
-    private User[] allUsers;
-    private User activeUser;
+    private ArrayList<Music> upcomingMusic = new ArrayList<Music>();
+    private ArrayList<User> allUsers = new ArrayList<User>();
+    private User activeUser = null;
+    private Music activeMusic = null;
 
     // 2. Add a constructor with 3 parameters to set all of the instance variables to the given parameters.
+    public CorMusic()
+    {
+        registerUser("charles", "1234");
+        registerUser("Kyle636", "GeorgeSux");
+        registerUser("george_not_found", "Kylesbadatmath");
+        registerUser("Corvallis Youth Symphony", "au*(y.T?#8Jk_");
+
+        login("Corvallis Youth Symphony", "au*(y.T?#8Jk_");
+        addMusic("CYS Winter Concert", "December 7th @ 4pm", 8.00, "LaSells Steward Center");
+        addMusic("CYS Spring Concert", "March 21st @ 4pm", 8.00, "LaSells Steward Center");
+        addMusic("CYS cabaret", "January 30th", 35.00, "Ashbrook Elementary School");
+
+        logout();
+
+        login("Kyle636", "GeorgeSux");
+        addMusic("Busking at the farmers market", "Every Saturday from 8-12", 0.00, "Farmers Market");
+
+        logout();
+
+        login("george_not_found", "Kylesbadatmath");
+        viewNextMusic();
+        viewNextMusic();
+        
+    }
+
+    public void viewNextMusic()
+    {
+        if (activeMusic == null)
+        {
+            activeMusic = upcomingMusic.get(0);
+        } 
+        else
+        {
+            int idx = upcomingMusic.indexOf(activeMusic);
+            if (idx >= upcomingMusic.size())
+            {
+                activeMusic = upcomingMusic.get(0);
+            }
+            else 
+            {
+                activeMusic = upcomingMusic.get(idx+1);
+            }
+        }
+        System.out.println(activeMusic);
+    }
 
     // 3. Write a print() method that uses System.out.println to print out all the instance variables.
     public void print()
@@ -17,12 +65,12 @@ public class Main
     }
 
     // 4. Create accessor (get) methods for each of the instance variables.
-    public Music[] getUpcomingMusic()
+    public ArrayList<Music> getUpcomingMusic()
     {
         return upcomingMusic;
     }
 
-    public User[] getUsers()
+    public ArrayList<User> getUsers()
     {
         return allUsers;
     }
@@ -33,13 +81,12 @@ public class Main
     }
 
     // 5. Create mutator (set) methods for each of the instance variables.
-
-    public void setUpcomingMusic(Music[] musics)
+    public void setUpcomingMusic(ArrayList<Music> musics)
     {
         upcomingMusic = musics;
     }
 
-    public void setusers(User[] users)
+    public void setusers(ArrayList<User> users)
     {
         allUsers = users;
     }
@@ -50,20 +97,73 @@ public class Main
     }
 
     // 6. Create a toString() method that returns all the information in the instance variables.
+    public String toString()
+    {
+        String musics = "";
+        for (Music music: upcomingMusic)
+        {
+            musics += music;
+        }
+        return activeUser + musics;
+    }
 
     // 7. Write an additional method for your class that takes a parameter.
-    // For example, there could be a print method with arguments that indicate how you want to print out
-    // the information, e.g. print(format) could print the data according to an argument that is "plain"
-    // or "table" where the data is printed in a table drawn with dashes and lines (|).
-
-    // 8. Write a main method that constructs at least 2 objects of your class
-    // using the constructor and then calls all of the methods that you created above to test them.
-    public static void main(String[] args)
+    public boolean login(String username, String password)
     {
-       // Construct 2 objects of your class using the constructor with different values
+        User user = getUser(username);
+        if (user == null)
+        {
+            return false;
+        }
+        if (user.checkPassword(password))
+        {
+            activeUser = user;
+            return true;
+        }
+        return false;
+    }
 
+    public void logout()
+    {
+        activeUser = null;
+    }
 
-       // call all of the objects methods to test them
+    public User getUser(String username)
+    {
+        for (User user: allUsers)
+        {
+            if (user.getUsername() == username)
+            {
+                return user;
+            }
+        }
+        return null;
+    }
 
+    public boolean registerUser(String username, String password)
+    {
+        User user = getUser(username);
+        if (user == null)
+        {
+            allUsers.add(new User(username, password));
+            return true;
+        }
+        return false;
+    }
+
+    public void addMusic(Music music)
+    {
+        upcomingMusic.add(music);
+    }
+
+    public boolean addMusic(String name, String time, Double price, String location)
+    {
+
+        if (activeUser == null)
+        {
+            return false;
+        }
+        addMusic(new Music(activeUser, name, time, price, location));
+        return true;
     }
 }

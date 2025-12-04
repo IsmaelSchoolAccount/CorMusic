@@ -12,13 +12,21 @@ public class User {
         this.username = username;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getUsername() {
         return username;
     }
 
     public boolean checkPassword(String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'checkPassword'");
+        return password == this.password;
+    }
+
+    public String toString()
+    {
+        return this.username;
     }
     
 }
