@@ -1,4 +1,7 @@
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main 
 {
@@ -7,8 +10,9 @@ public class Main
     private static ArrayList<User> allUsers = new ArrayList<User>();
     private static User activeUser = null;
     private static Music activeMusic = null;
+    private static Scanner scanner = new Scanner(new InputStreamReader(System.in, Charset.forName("UTF-8")));
+    private static String[] menuOptions = {"Exit", "Register User", "Login", "Logout", "Add Music", "View Next Music", "Comment", "Like", "View Comments"};
 
-    // 2. Add a constructor with 3 parameters to set all of the instance variables to the given parameters.
     public static void main(String args[])
     {
         registerUser("charles", "1234");
@@ -29,19 +33,167 @@ public class Main
         logout();
 
         login("george_not_found", "Kylesbadatmath");
-        viewNextMusic();
-        viewNextMusic();
-        viewNextMusic();
-        viewNextMusic();
+        viewNextMusic(false);
+        viewNextMusic(false);
+        viewNextMusic(false);
+        viewNextMusic(false);
 
         comment("This guy is great you should def check him out");
         like();
-
-        viewComments();
         
+        activeMusic = null;
+        logout();
+        
+        executeMenu();
     }
 
-    public static void viewNextMusic()
+    public static void executeMenu() {
+        printMenu();
+        //Instead of an Enum im using a switch cause I like it better and I have no clue how an enum would work here
+        String username = null;
+        String password = null;
+        switch (getNextIntFromUser()) {
+            case 0:
+                exit();
+                break;
+            case 1:
+                System.out.println("Please enter your desired username and password");
+                System.out.println("(0 to go back)");
+                System.out.print("Username: ");
+                username = getNextStringLineFromUser();
+                System.out.print("Password: ");
+                password = getNextStringLineFromUser();
+                if (password != "0" && username != "0")
+                {
+                    if (registerUser(username, password))
+                    {
+                        System.out.println("Registration succesful");
+                    }
+                    else
+                    {
+                        System.out.println("Registration failed, likely username was not available, please try again");
+                    }
+                }
+                else
+                {   
+                    System.out.println("Registration cancelled");
+                }
+                executeMenu();
+                break;
+            case 2:
+                System.out.println("Enter your username and password");
+                System.out.println("(0 to go back)");
+                System.out.print("Username: ");
+                username = getNextStringLineFromUser();
+                System.out.print("Passoword: ");
+                password = getNextStringLineFromUser();
+                if (password != "0" && username != "0")
+                {
+                    if (login(username, password))
+                    {
+                        System.out.println("Login succesful");
+                    }
+                    else
+                    {
+                        System.out.println("Login failed, please try again");
+                    }
+                }
+                else
+                {   
+                    System.out.println("login cancelled");
+                }
+                executeMenu();
+                break;
+            case 3:
+                logout();
+                System.out.println("Logout Succesful");
+                executeMenu();
+                break;
+            case 4:
+                //add music
+                executeMenu();
+                break;
+            case 5:
+                viewNextMusic(true);
+                executeMenu();
+                break;
+            case 6:
+                System.out.println("Enter your comment");
+                System.out.println("(0 to go back)");
+                String comments = getNextStringLineFromUser();
+                if (comments != "0")
+                {
+                    if (comment(comments))
+                    {
+                        viewComments();
+                    }
+                    else
+                    {
+                        System.out.println("Comment failed, make sure you have selected a music and are logged in");
+                    }
+                }
+                else
+                {   
+                    System.out.println("Comment cancelled");
+                }
+                executeMenu();
+                break;
+            case 7:
+                if (like())
+                {
+                    System.out.println("total likes: " + activeMusic.likes);
+                }
+                else
+                {
+                    System.out.println("Like failed, make sure you have selected a music and are logged in");
+                }
+                executeMenu();
+                break;
+            case 8:
+                viewComments();
+                executeMenu();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private static void printMenu() {
+        System.out.println();
+        System.out.println("--Main Menu--");
+        System.out.println("Select an option using one of the numbers shown");
+        System.out.println();
+
+        for (int i = 0; i < menuOptions.length; i++) {
+            System.out.print(i + ": ");
+            System.out.println(menuOptions[i]);
+        }
+    }
+
+    private static void exit() {
+        System.out.println("Exiting now. Goodbye.");
+        scanner.close();
+    }
+
+    /**
+     * Collects next user-entered int.
+     * @return integer value denoting the user selection
+     */
+    private static int getNextIntFromUser() {
+        return scanner.nextInt();
+    }
+
+    /**
+     * Skips a line of empty input from the scanner's input stream
+     * and then returns the next available line.
+     * @return string representing the line of input typed by the user
+     */
+    private static String getNextStringLineFromUser() {
+        scanner.nextLine();
+        return scanner.nextLine();
+    }
+
+    public static void viewNextMusic(boolean print)
     {
         if (activeMusic == null)
         {
@@ -59,18 +211,23 @@ public class Main
                 activeMusic = upcomingMusic.get(idx+1);
             }
         }
-        System.out.println();
-        System.out.println(activeMusic);
+        if (print)
+        {
+            System.out.println();
+            System.out.println(activeMusic);
+        }
     }
 
-    public static void comment(String text)
+    public static boolean comment(String text)
     {
         if (activeMusic != null && activeUser != null)
         {
             Comment comment = new Comment(text, activeMusic, activeUser);
             activeUser.comment(comment);
             activeMusic.comment(comment);
+            return true;
         }
+        return false;
     }
 
     public static void viewComments()
@@ -96,12 +253,14 @@ public class Main
         }
     }
 
-    public static void like()
+    public static boolean like()
     {
         if (activeMusic != null && activeUser != null)
         {
             activeUser.like(activeMusic);
+            return true;
         }
+        return false;
     }
 
     public static void unLike()
@@ -170,6 +329,7 @@ public class Main
         User user = getUser(username);
         if (user == null)
         {
+            System.out.println("user was null");
             return false;
         }
         if (user.checkPassword(password))
@@ -177,6 +337,7 @@ public class Main
             activeUser = user;
             return true;
         }
+        System.out.println("password was incorrect");
         return false;
     }
 
@@ -189,7 +350,8 @@ public class Main
     {
         for (User user: allUsers)
         {
-            if (user.getUsername() == username)
+            System.out.println(user.getUsername()+ " + " + username);
+            if (user.getUsername().equals(username))
             {
                 return user;
             }
