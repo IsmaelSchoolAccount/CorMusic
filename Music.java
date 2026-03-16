@@ -2,13 +2,13 @@ import java.util.ArrayList;
 
 public class Music {
 
-    private User user;
-    private String name;
-    private String time;
-    private double price;
-    private String location;
-    private ArrayList<Comment> comments = new ArrayList<Comment>();
-    private int likes = 0;
+    protected User user;
+    protected String name;
+    protected String time;
+    protected double price;
+    protected String location;
+    protected ArrayList<Comment> comments = new ArrayList<Comment>();
+    protected int likes = 0;
 
     public Music(User activeUser, String name, String time, double price, String location) {
         this.user = activeUser;

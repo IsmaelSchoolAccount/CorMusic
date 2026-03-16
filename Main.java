@@ -17,14 +17,14 @@ public class Main
         registerUser("Corvallis Youth Symphony", "au*(y.T?#8Jk_");
 
         login("Corvallis Youth Symphony", "au*(y.T?#8Jk_");
-        addMusic("CYS Winter Concert", "December 7th @ 4pm", 8.00, "LaSells Steward Center");
-        addMusic("CYS Spring Concert", "March 21st @ 4pm", 8.00, "LaSells Steward Center");
-        addMusic("CYS cabaret", "January 30th", 35.00, "Ashbrook Elementary School");
+        addMusic("CYS Winter Concert", "December 7th @ 4pm", 8.00, "LaSells Steward Center", "Concert");
+        addMusic("CYS Spring Concert", "March 21st @ 4pm", 8.00, "LaSells Steward Center", "Concert");
+        addMusic("CYS cabaret", "January 30th", 35.00, "Ashbrook Elementary School", "Concert");
 
         logout();
 
         login("Kyle636", "GeorgeSux");
-        addMusic("Busking at the farmers market", "Every Saturday from 8-12", 0.00, "Farmers Market");
+        addMusic("Busking at the farmers market", "Every Saturday from 8-12", "Farmers Market");
 
         logout();
 
@@ -213,14 +213,36 @@ public class Main
         upcomingMusic.add(music);
     }
 
-    public static boolean addMusic(String name, String time, Double price, String location)
+    public static boolean addMusic(String name, String time, Double price, String location, String type)
     {
 
         if (activeUser == null)
         {
             return false;
         }
-        addMusic(new Music(activeUser, name, time, price, location));
+        if (type == "Busking")
+        {
+            addMusic(new Busking(activeUser, name, time, location));
+        }
+        else if (type == "Concert")
+        {
+            addMusic(new Concert(activeUser, name, time, price, location));
+        }
+        else
+        {
+            addMusic(new Music(activeUser, name, time, price, location));
+        }
+        return true;
+    }
+
+    public static boolean addMusic(String name, String time, String location)
+    {
+
+        if (activeUser == null)
+        {
+            return false;
+        }
+        addMusic(new Busking(activeUser, name, time, location));
         return true;
     }
 }
