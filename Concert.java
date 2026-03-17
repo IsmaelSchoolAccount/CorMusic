@@ -7,6 +7,6 @@ public class Concert extends Music {
     @Override
     public String toString()
     {
-        return "Concert Post by: " + user + "\n" + name + "\n" + location + " --- " + time + "\nprice: " + price + "$";
+        return "Post by: " + user + "\n" + name + "\n" + location + " --- " + time + "\nprice: " + price + "$";
     }
 }

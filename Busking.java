@@ -7,6 +7,6 @@ public class Busking extends Music {
     @Override
     public String toString()
     {
-        return "Busking Post by: " + user + "\n" + name + "\n" + location + " --- " + time;
+        return "Post by: " + user + "\n" + name + "\n" + location + " --- " + time;
     }
 }

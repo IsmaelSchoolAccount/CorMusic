@@ -26,7 +26,7 @@ public class User {
     }
 
     public boolean checkPassword(String password) {
-        return password == this.password;
+        return password.equals(this.password);
     }
 
     public String toString()

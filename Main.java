@@ -59,10 +59,13 @@ public class Main
             case 1:
                 System.out.println("Please enter your desired username and password");
                 System.out.println("(0 to go back)");
-                System.out.print("Username: ");
+                System.out.println("Username: ");
                 username = getNextStringLineFromUser();
-                System.out.print("Password: ");
-                password = getNextStringLineFromUser();
+                System.out.println("Entered username: " + username);
+                System.out.println("Password: ");
+                password = getNextOneStringLineFromUser();
+                System.out.println("Entered password: " + password);
+                System.out.println("---------------");
                 if (password != "0" && username != "0")
                 {
                     if (registerUser(username, password))
@@ -79,14 +82,19 @@ public class Main
                     System.out.println("Registration cancelled");
                 }
                 executeMenu();
+                System.out.print("press enter to continue");
+                getNextStringLineFromUser();
                 break;
             case 2:
                 System.out.println("Enter your username and password");
                 System.out.println("(0 to go back)");
-                System.out.print("Username: ");
+                System.out.println("Username: ");
                 username = getNextStringLineFromUser();
-                System.out.print("Passoword: ");
-                password = getNextStringLineFromUser();
+                System.out.println("Entered username: " + username);
+                System.out.println("Passoword: ");
+                password = getNextOneStringLineFromUser();
+                System.out.println("Entered password: " + password);
+                System.out.println("---------------");
                 if (password != "0" && username != "0")
                 {
                     if (login(username, password))
@@ -110,11 +118,37 @@ public class Main
                 executeMenu();
                 break;
             case 4:
-                //add music
+                System.out.println("Add an event to the platform to be shared all around corvallis?");
+                System.out.print("enter 1 to continue 0 to cancel: ");
+                if (getNextIntFromUser() == 1)
+                {
+                    System.out.println("Name of the event: ");
+                    String name = getNextStringLineFromUser();
+                    System.out.println("Time and date: ");
+                    String time = getNextOneStringLineFromUser();
+                    System.out.println("Price of tickets (if free put 0): ");
+                    double cost = Double.parseDouble(getNextOneStringLineFromUser());
+                    System.out.println("Location: ");
+                    String location = getNextOneStringLineFromUser();
+                    if (cost == 0)
+                    {
+                        addMusic(name, time, location);
+                    }
+                    else
+                    {
+                        addMusic(name, time, cost, location, "Concert");
+                    }
+                }
+                else
+                {
+                    System.out.println("canceling music post");
+                }
                 executeMenu();
                 break;
             case 5:
                 viewNextMusic(true);
+                System.out.print("press enter to continue");
+                getNextStringLineFromUser();
                 executeMenu();
                 break;
             case 6:
@@ -136,6 +170,7 @@ public class Main
                 {   
                     System.out.println("Comment cancelled");
                 }
+                System.out.print("press enter to continue");
                 executeMenu();
                 break;
             case 7:
@@ -147,10 +182,14 @@ public class Main
                 {
                     System.out.println("Like failed, make sure you have selected a music and are logged in");
                 }
+                System.out.print("press enter to continue");
+                getNextStringLineFromUser();
                 executeMenu();
                 break;
             case 8:
                 viewComments();
+                System.out.print("press enter to continue");
+                getNextStringLineFromUser();
                 executeMenu();
                 break;
             default:
@@ -190,6 +229,10 @@ public class Main
      */
     private static String getNextStringLineFromUser() {
         scanner.nextLine();
+        return scanner.nextLine();
+    }
+
+    private static String getNextOneStringLineFromUser() {
         return scanner.nextLine();
     }
 
@@ -329,7 +372,7 @@ public class Main
         User user = getUser(username);
         if (user == null)
         {
-            System.out.println("user was null");
+            System.out.println("user is null");
             return false;
         }
         if (user.checkPassword(password))
@@ -337,7 +380,7 @@ public class Main
             activeUser = user;
             return true;
         }
-        System.out.println("password was incorrect");
+        System.out.println("password is wrong");
         return false;
     }
 
@@ -350,7 +393,6 @@ public class Main
     {
         for (User user: allUsers)
         {
-            System.out.println(user.getUsername()+ " + " + username);
             if (user.getUsername().equals(username))
             {
                 return user;
